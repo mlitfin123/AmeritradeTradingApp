@@ -10,7 +10,7 @@ def on_open(ws):
 
     ws.send(json.dumps(auth_data))
 
-    listen_message = {"action": "listen", "data": {"streams": ["AM.*"]}}
+    listen_message = {"action": "listen", "data": {"streams": ["AM.TSLA"]}}
 
     ws.send(json.dumps(listen_message))
 
