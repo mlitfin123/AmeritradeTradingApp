@@ -1,0 +1,12 @@
+{% extends "trader/layout.html" %}
+{% block title %}
+    Log a message
+{% endblock %}
+{% block content %}
+    <form method="POST" class="log-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <h2>Select the Button to Start the Trade</h2>
+        <button type="submit" class="save btn btn-default">Start Trade</button>
+    </form>
+{% endblock %}
