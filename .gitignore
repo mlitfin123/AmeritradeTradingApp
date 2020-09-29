@@ -2,4 +2,6 @@ config.py
 token
 chromedriver.exe
 __pycache__
-data
+ohlc
+technicals
+movers.csv
