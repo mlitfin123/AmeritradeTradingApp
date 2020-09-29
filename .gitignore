@@ -5,3 +5,4 @@ __pycache__
 ohlc
 technicals
 movers.csv
+minute_movers.csv

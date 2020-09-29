@@ -9,13 +9,10 @@ while True:
     symbols = [holding.split(',')[0].strip() for holding in holdings]
     symbols = ",".join(symbols)
 
-    # oneminute_bars_url = config.BARS_URL + '/1Min?symbols='+ symbols
     fiveminute_bars_url = config.BARS_URL + '/5Min?symbols='+ symbols
-    # day_bars_url = '{}/day?symbols={}&limit=1000'.format(config.BARS_URL, symbols)
 
-    # r = requests.get(fiveminute_bars_url, headers=config.HEADERS)
     r = requests.get(fiveminute_bars_url, headers=config.HEADERS)
-    # r = requests.get(day_bars_url, headers=config.HEADERS)
+
     data = r.json()
     print(data)
     async def loop():
