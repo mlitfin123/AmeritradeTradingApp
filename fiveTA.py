@@ -7,8 +7,6 @@ from config import ALPACA_KEY, ALPACA_SECRET
 import time
 import logging
 
-in_position = False
-
 while True:
     holdings = open ('data/movers.csv').readlines()
     BASE_URL = "https://paper-api.alpaca.markets"
@@ -46,12 +44,12 @@ while True:
 
         # Read a csv file into a pandas dataframe
         df = pd.read_csv('data/ohlc/'+ SYMBOL +'.txt', parse_dates=True, index_col='Date')
-        sma = btalib.sma(df)
+        ema = btalib.ema(df)
 
-        sma = btalib.sma(df)
+        ema = btalib.ema(df)
         rsi = btalib.rsi(df)
 
-        df['sma'] = sma.df
+        df['ema'] = ema.df['ema']
         df['rsi'] = rsi.df
 
         macd = btalib.macd(df)
@@ -60,6 +58,7 @@ while True:
         df['signal'] = macd.df['signal']
         df['histogram'] = macd.df['histogram']
         print(df)
+        df.ema.to_csv('data/technicals/ema/'+ SYMBOL +'ema.csv', header=True, index=False)
         df.rsi.to_csv('data/technicals/'+ SYMBOL +'rsi.csv', header=True, index=False)
         df.macd.to_csv('data/technicals/'+ SYMBOL +'macd.csv', header=True, index=False)
         df.signal.to_csv('data/technicals/'+ SYMBOL +'signal.csv', header=True, index=False)
@@ -88,7 +87,7 @@ while True:
                 print("== Closing position ==")
                 close_position()
 
-        if clock.is_open and newMACD > newSignal:
+        if clock.is_open and newMACD > newSignal and newMACD < 0:
             print('MACD Buy Signal!')
             if in_position == False and newRSI < 60:
                 print("== Placing order ==")

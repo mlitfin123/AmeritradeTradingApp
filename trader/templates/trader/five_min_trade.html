@@ -1,12 +1,12 @@
 {% extends "trader/layout.html" %}
 {% block title %}
-    Trader
+    Five Minute Trader
 {% endblock %}
 {% block content %}
     <form method="POST" class="log-form">
         {% csrf_token %}
         {{ form.as_p }}
-        <h2>Select the Button to Start the Trade</h2>
+        <h2>Select the Button to Start the Five Minute Trade</h2>
         <button type="submit" class="save btn btn-default">Start Trade</button>
     </form>
 {% endblock %}

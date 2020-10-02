@@ -7,8 +7,6 @@ from config import ALPACA_KEY, ALPACA_SECRET
 import time
 import logging
 
-in_position = False
-
 while True:
     holdings = open ('data/minute_movers.csv').readlines()
     BASE_URL = "https://paper-api.alpaca.markets"
@@ -45,13 +43,17 @@ while True:
             print (in_position)
 
         # Read a csv file into a pandas dataframe
-        df = pd.read_csv('data/ohlc/'+ SYMBOL +'.txt', parse_dates=True, index_col='Date')
-        sma = btalib.sma(df)
+        try:
+            df = pd.read_csv('data/ohlc/'+ SYMBOL +'1.txt', parse_dates=True, index_col='Date')
+        except Exception as e:
+            logging.error(e)
+            time.sleep(.01)
+            df = pd.read_csv('data/ohlc/'+ SYMBOL +'1.txt', parse_dates=True, index_col='Date')
 
-        sma = btalib.sma(df)
+        ema = btalib.ema(df)
         rsi = btalib.rsi(df)
 
-        df['sma'] = sma.df
+        df['ema'] = ema.df
         df['rsi'] = rsi.df
 
         macd = btalib.macd(df)
@@ -60,14 +62,25 @@ while True:
         df['signal'] = macd.df['signal']
         df['histogram'] = macd.df['histogram']
         print(df)
-        df.rsi.to_csv('data/technicals/'+ SYMBOL +'rsi.csv', header=True, index=False)
-        df.macd.to_csv('data/technicals/'+ SYMBOL +'macd.csv', header=True, index=False)
-        df.signal.to_csv('data/technicals/'+ SYMBOL +'signal.csv', header=True, index=False)
+        try:
+            df.rsi.to_csv('data/technicals/'+ SYMBOL +'rsi1.csv', header=True, index=False)
+            df.macd.to_csv('data/technicals/'+ SYMBOL +'macd1.csv', header=True, index=False)
+            df.signal.to_csv('data/technicals/'+ SYMBOL +'signal1.csv', header=True, index=False)
 
-        readRSI = open ('data/technicals/'+ SYMBOL +'rsi.csv').readlines()
-        readMACD = open ('data/technicals/'+ SYMBOL +'macd.csv').readlines()
-        readSignal = open ('data/technicals/'+ SYMBOL +'signal.csv').readlines()
+            readRSI = open ('data/technicals/'+ SYMBOL +'rsi1.csv').readlines()
+            readMACD = open ('data/technicals/'+ SYMBOL +'macd1.csv').readlines()
+            readSignal = open ('data/technicals/'+ SYMBOL +'signal1.csv').readlines()
+        except Exception as e:
+            logging.error(e)
+            time.sleep(.1)
+            df.rsi.to_csv('data/technicals/'+ SYMBOL +'rsi1.csv', header=True, index=False)
+            df.macd.to_csv('data/technicals/'+ SYMBOL +'macd1.csv', header=True, index=False)
+            df.signal.to_csv('data/technicals/'+ SYMBOL +'signal1.csv', header=True, index=False)
 
+            readRSI = open ('data/technicals/'+ SYMBOL +'rsi1.csv').readlines()
+            readMACD = open ('data/technicals/'+ SYMBOL +'macd1.csv').readlines()
+            readSignal = open ('data/technicals/'+ SYMBOL +'signal1.csv').readlines()
+        
         newRSI= float(readRSI[100].rstrip("\n"))
         newMACD= float(readMACD[100].rstrip("\n"))
         newSignal= float(readSignal[100].rstrip("\n"))
@@ -88,7 +101,7 @@ while True:
                 print("== Closing position ==")
                 close_position()
 
-        if clock.is_open and newMACD > newSignal:
+        if clock.is_open and newMACD > newSignal and newMACD < 0:
             print('MACD Buy Signal!')
             if in_position == False and newRSI < 60:
                 print("== Placing order ==")
@@ -100,4 +113,4 @@ while True:
                 print("== Closing position ==")
                 close_position()
 
-    time.sleep(60)
+    time.sleep(30)

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render
 import re
+import os
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from trader.forms import StartTradeForm
@@ -33,7 +34,40 @@ def trader(request):
             print(res)
             return redirect("home")
     else:
+        print('failed')
         return render(request, "trader/start_trade.html", {"form": form})
+
+def startFiveBars(request):
+    if request.method == "POST":
+        import five_minute_bars
+        print('scriptstarted')
+    else:
+        print('failedScript')
+        return render(request, "trader/five_min_trade.html")
+
+def startFiveScript(request):
+    if request.method == "POST":
+        import minute_bars
+        print('scriptstarted')
+    else:
+        print('failedScript')
+        return render(request, "trader/five_min_trade.html")
+
+def startMinBars(request):
+    if request.method == "POST":
+        import minuteTA
+        print('scriptstarted')
+    else:
+        print('failedScript')
+        return render(request, "trader/one_min_trade.html")
+
+def startMinScript(request):
+    if request.method == "POST":
+        import minuteTA
+        print('scriptstarted')
+    else:
+        print('failedScript')
+        return render(request, "trader/one_min_trade.html")
 
 def home(request):
     return render(request, "trader/home.html")

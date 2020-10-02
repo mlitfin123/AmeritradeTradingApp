@@ -18,7 +18,7 @@ while True:
     async def loop():
         for symbol in data:
             print(symbol)
-            filename = 'data/ohlc/{}.txt'.format(symbol)
+            filename = 'data/ohlc/{}1.txt'.format(symbol)
             f = open(filename, 'w+')
             f.write('Date,Open,High,Low,Close,Volume,OpenInterest\n')
             await asyncio.sleep(.1)
