@@ -12,6 +12,8 @@ from tda.client import Client
 from tda.orders.common import OrderType, Session, Duration
 from tda.orders.equities import equity_buy_market, equity_buy_limit
 from tda.orders.generic import OrderBuilder
+import pandas as pd
+import requests
 
 import json
 import config
@@ -23,6 +25,19 @@ except FileNotFoundError:
     with webdriver.Chrome(executable_path=config.CHROMEDRIVER_PATH) as driver:
         c = auth.client_from_login_flow(
             driver, config.API_KEY, config.REDIRECT_URI, config.TOKEN_PATH)
+
+def Standing_Orders(headers, account_id):
+    endpoint = 'https://api.tdameritrade.com/v1/orders'
+
+    payload = {
+        'accountId': account_id,
+        'maxResults': 6
+    }
+
+    content = requests.get(url=endpoint, json=payload, headers=headers)
+    order_info = content.json()
+    print(order_info)
+
 # performs the trade
 def trader(request):
     form = StartTradeForm(request.POST or None)
@@ -31,6 +46,10 @@ def trader(request):
         if form.is_valid():
             builder = equity_buy_limit("REKR", 2, 2)
             res = c.place_order(config.ACCOUNT_ID, builder.build())
+            orders = Standing_Orders
+            filename = 'data/orders/order.txt'
+            f = open(filename, 'w+')
+            f.write(str(orders))
             print(res)
             return redirect("home")
     else:

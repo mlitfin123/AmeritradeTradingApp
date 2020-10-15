@@ -20,13 +20,13 @@ while True:
             print(symbol)
             filename = 'data/ohlc/{}1.txt'.format(symbol)
             f = open(filename, 'w+')
-            f.write('Date,Open,High,Low,Close,Volume,OpenInterest\n')
+            f.write('Date,Open,High,Low,Close,Volume\n')
             await asyncio.sleep(.1)
             for bar in data[symbol]:
                 t = datetime.fromtimestamp(bar['t'])
                 day = t.strftime('%Y-%m-%d-%M')
 
-                line = '{},{},{},{},{},{},{}\n'.format(day, bar['o'], bar['h'], bar['l'], bar['c'], bar['v'], 0.00)
+                line = '{},{},{},{},{},{}\n'.format(day, bar['o'], bar['h'], bar['l'], bar['c'], bar['v'])
                 f.write(line)
     asyncio.run(loop())
     time.sleep(30)

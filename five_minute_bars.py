@@ -19,14 +19,19 @@ while True:
         for symbol in data:
             print(symbol)
             filename = 'data/ohlc/{}.txt'.format(symbol)
+            file1 = 'data/technicals/price/{}.txt'.format(symbol)
             f = open(filename, 'w+')
-            f.write('Date,Open,High,Low,Close,Volume,OpenInterest\n')
+            f1 = open(file1, 'w+')
+            f.write('Date,Open,High,Low,Close,Volume\n')
+            f1.write('Open Price\n')
             await asyncio.sleep(.1)
             for bar in data[symbol]:
                 t = datetime.fromtimestamp(bar['t'])
                 day = t.strftime('%Y-%m-%d-%M')
 
-                line = '{},{},{},{},{},{},{}\n'.format(day, bar['o'], bar['h'], bar['l'], bar['c'], bar['v'], 0.00)
+                line = '{},{},{},{},{},{}\n'.format(day, bar['o'], bar['h'], bar['l'], bar['c'], bar['v'])
+                line1 = '{}\n'.format(bar['c'])
                 f.write(line)
+                f1.write(line1)
     asyncio.run(loop())
     time.sleep(60)

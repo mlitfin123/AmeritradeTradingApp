@@ -107,7 +107,7 @@ while True:
                 print("== Placing order ==")
                 place_order()
         
-        if newMACD < newSignal:
+        if clock.is_open and newMACD < newSignal:
             print('MACD Sell Signal!')
             if in_position == True and newRSI > 30:
                 print("== Closing position ==")
